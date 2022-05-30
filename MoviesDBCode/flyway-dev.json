@@ -1,7 +1,7 @@
 {
   "version": "2.0",
-  "name": "MoviesDBCode",
-  "id": "cbb80a2a-f4cc-415d-94b3-c3da196413d8",
+  "name": "DBCode",
+  "id": "b8e6bfa6-de16-4150-8643-58d94108d8b1",
   "databaseType": "MySql",
   "development": {
     "scriptsFolder": "./schema-model"
