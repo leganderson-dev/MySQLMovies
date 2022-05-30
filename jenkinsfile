@@ -5,6 +5,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
+		flyway info -url=jdbc:mysql://localhost:3306/moviesCI -user=root -password=Redg@te1
             }
         }
         stage('Test') {
