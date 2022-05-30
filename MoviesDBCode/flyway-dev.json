@@ -1,0 +1,14 @@
+{
+  "version": "2.0",
+  "name": "MoviesDBCode",
+  "id": "cbb80a2a-f4cc-415d-94b3-c3da196413d8",
+  "databaseType": "MySql",
+  "development": {
+    "scriptsFolder": "./schema-model"
+  },
+  "deployment": {
+    "flywayConfFiles": [
+      "./flyway.conf"
+    ]
+  }
+}
