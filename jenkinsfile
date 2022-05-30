@@ -1,21 +1,16 @@
 node {
         def OutputDirectory = "F:/DevOps_Resources/Deployment Resources/MySQLMovies"
         
-        def CiDatabaseJdbc = "jdbc:mysql://localhost:3306/moviesCI"
-        def AcceptanceDatabaseJdbc = "jdbc:mysql://localhost:3306/moviesacceptance"
-        def ProductionDatabaseJdbc = "jdbc:mysql://localhost:3306/movies"
-
         def DatabaseJdbc = "jdbc:mysql://localhost:3306/movies"
+
         def BuildSchema = "moviesci"        
         def AcceptanceSchema = "moviesacceptance"
-        
-        def Schema = "DBO"
+        def ProdSchema = "movies"  
+
+      
         def User = "root"
         def Password = "Redg@te1"
-        def ProdPassword = "Redg@te1"
-        def SQLCOMPARE='"C:\\Program Files\\Red Gate\\Schema Compare for Oracle 6\\sco.exe"'
-        def SQLDATACOMPARE='"C:\\Program Files\\Red Gate\\Data Compare for Oracle 6\\dco.exe"'
-        def CODEANALYSIS='"C:\\Program Files\\Red Gate\\Code Analysis for Oracle\\cao.cmd"'
+
      
         stage ('Prep') 
         {
@@ -77,6 +72,45 @@ node {
             if (status != 0) { error('Deployment to Acceptance failed') }
             
             archiveArtifacts allowEmptyArchive: true, artifacts: 'Acceptance.sql'
+        }
+
+        stage ('Approval Gate')
+        {
+            def message = "Approve release to Production?"
+            // wrapping in a time out so it does not block the agent and simply fails the build if there is no user intervention.
+            timeout(time: 30, unit: 'MINUTES')
+                {
+            def userInput = input(
+                id: 'userInput',
+                message: "$message",
+                parameters:     [
+                [$class: 'TextParameterDefinition', defaultValue: 'I Approve The Deployment', description: 'To Proceed, type I Approve The Deployment', name: 'Review deployment artifacts before proceeding']
+                                ]
+                    )
+                    if (userInput.indexOf('I Approve The Deployment') == -1) {
+                        currentBuild.result = 'ABORTED'
+                        error('Deployment aborted')
+                    }
+                }
+        }
+     
+        stage ('Deploy to Production') 
+        {
+            echo "Deploying to Production Database"
+            
+            // Create the dry run script
+            status = bat returnStatus: true, label: "Production DryRun", script:" FLYWAY migrate -dryRunOutput=\"${OutputDirectory}/workspace/Production.sql\" -url=${DatabaseJdbc} -user=${User} -password=${Password} -schemas=${ProdSchema}"
+            echo "Generating the dryrun script for Production: $status"
+            if (status != 0) { error('Generating Dryrun script for Production failed') }
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'Production.sql'
+            
+            // Deploy to Production      
+            status = bat returnStatus: true, label: "Production Deployment", script:" FLYWAY migrate info -url=${DatabaseJdbc} -user=${User} -password=${Password} -schemas=${ProdSchema}"
+            echo "deploying to Production: $status"
+            if (status != 0) { error('Deployment to Production failed') }
+            
+           
+    
         }
 
     }
