@@ -1,33 +1,46 @@
-pipeline {
-    agent any
-
-    stages {
-
-
-         
-        stage('Build') {
-                        steps   {
-                                echo 'Building..'
-                            
-                                deleteDir()
-                                checkout scm
-
-                                def status
-                                // Clean the CI DB to get a fresh build
-                                status = bat returnStatus: true, label: "Clean", script:" FLYWAY clean info -url=jdbc:mysql://localhost:3306/moviesCI -user=root -password=Redg@te1"
-                                echo "Status of Running CI build: $status"
-                                if (status != 0) { error('Running CI build failed') }
-                                }
-                        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
+node {
+    def OutputDirectory = "F:\DevOps_Resources\Deployment Resources\MySQLMovies"
+     
+    def CiDatabaseJdbc = "jdbc:mysql://localhost:3306/moviesCI"
+    def AcceptanceDatabaseJdbc = "jdbc:oracle:thin:@//localhost:1521/acceptance"
+    def ProductionDatabaseJdbc = "jdbc:oracle:thin:@//localhost:1521/production"
+     
+    def Schema = "DBO"
+    def User = "root"
+    def Password = "Redg@te1"
+	def ProdPassword = "Redgate1"
+    def SQLCOMPARE='"C:\\Program Files\\Red Gate\\Schema Compare for Oracle 6\\sco.exe"'
+    def SQLDATACOMPARE='"C:\\Program Files\\Red Gate\\Data Compare for Oracle 6\\dco.exe"'
+    def CODEANALYSIS='"C:\\Program Files\\Red Gate\\Code Analysis for Oracle\\cao.cmd"'
+     
+        stage ('Prep') 
+        {
+            echo "Ensure the pipeline is configured to clean the Jenkins workspace before checkout"
+            //bat('set')
+            deleteDir()
+            checkout scm
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-            }
+ 
+        stage ('Build') 
+        {
+            echo "DB Build"
+        
+            def status
+            // Clean the CI DB to get a fresh build
+            status = bat returnStatus: true, label: "Clean", script:" FLYWAY clean info -url=${CiDatabaseJdbc} -user=${User} -password=${Password} -schemas=${Schema}"
+            echo "Status of Running CI build: $status"
+            if (status != 0) { error('Running CI build failed') }
+            
+            // Generate the dry run script for later review
+            status = bat returnStatus: true, label: "DryRun", script:" FLYWAY migrate info -dryRunOutput=\"${OutputDirectory}/workspace/Build.sql\" -url=${CiDatabaseJdbc} -user=${User} -password=${Password} -schemas=${Schema}"
+            echo "Status of Running CI build: $status"
+            if (status != 0) { error('Running CI build failed') }
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'Build.sql'
+    
+            // Migrate the CI db
+            status = bat returnStatus: true, label: "Build", script:" FLYWAY migrate info -url=${CiDatabaseJdbc} -user=${User} -password=${Password} -schemas=${Schema}"
+            echo "Status of Running CI build: $status"
+            if (status != 0) { error('Running CI build failed') }
+ 
         }
     }
-}
