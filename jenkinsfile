@@ -1,17 +1,17 @@
 node {
-    def OutputDirectory = "F:/DevOps_Resources/Deployment Resources/MySQLMovies"
-     
-    def CiDatabaseJdbc = "jdbc:mysql://localhost:3306/moviesCI"
-    def AcceptanceDatabaseJdbc = "jdbc:oracle:thin:@//localhost:1521/acceptance"
-    def ProductionDatabaseJdbc = "jdbc:oracle:thin:@//localhost:1521/production"
-     
-    def Schema = "DBO"
-    def User = "root"
-    def Password = "Redg@te1"
-	def ProdPassword = "Redgate1"
-    def SQLCOMPARE='"C:\\Program Files\\Red Gate\\Schema Compare for Oracle 6\\sco.exe"'
-    def SQLDATACOMPARE='"C:\\Program Files\\Red Gate\\Data Compare for Oracle 6\\dco.exe"'
-    def CODEANALYSIS='"C:\\Program Files\\Red Gate\\Code Analysis for Oracle\\cao.cmd"'
+        def OutputDirectory = "F:/DevOps_Resources/Deployment Resources/MySQLMovies"
+        
+        def CiDatabaseJdbc = "jdbc:mysql://localhost:3306/moviesCI"
+        def AcceptanceDatabaseJdbc = "jdbc:mysql://localhost:3306/moviesacceptance"
+        def ProductionDatabaseJdbc = "jdbc:mysql://localhost:3306/movies"
+        
+        def Schema = "DBO"
+        def User = "root"
+        def Password = "Redg@te1"
+        def ProdPassword = "Redg@te1"
+        def SQLCOMPARE='"C:\\Program Files\\Red Gate\\Schema Compare for Oracle 6\\sco.exe"'
+        def SQLDATACOMPARE='"C:\\Program Files\\Red Gate\\Data Compare for Oracle 6\\dco.exe"'
+        def CODEANALYSIS='"C:\\Program Files\\Red Gate\\Code Analysis for Oracle\\cao.cmd"'
      
         stage ('Prep') 
         {
@@ -41,6 +41,39 @@ node {
             status = bat returnStatus: true, label: "Build", script:" FLYWAY migrate info -url=${CiDatabaseJdbc} -user=${User} -password=${Password} -schemas=${Schema}"
             echo "Status of Running CI build: $status"
             if (status != 0) { error('Running CI build failed') }
- 
+         }
+        
+        stage ('Unit Tests')
+        {
+             echo "Running utPLSQL database Unit Tests"
+            /*
+            // status = bat returnStatus: true, label: "Unit Tests", script: "exec ut.Run();"
+            echo "Status of utPLSQL database Unit Tests: $status"
+            if (status != 0) { error('ERROR: Running Unit Tests failed') }
+        
+            status = junit allowEmptyResults: true, testResults: 'testResults.xml'
+            echo "Failed JUnit tests: $status.failCount"
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'testResults.xml'
+    
+            zip zipFile: 'codeCoverage.zip', archive: true, glob: 'codeCoverage.html, codeCoverage.html_assets/*'
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'codeCoverage.zip', fingerprint: true
+            */
         }
+    
+        stage ('Deploy to Acceptance')
+        {
+            echo "Deploying project to Acceptance Database"
+                       
+            status = bat returnStatus: true, label: "Acceptance DryRun", script:" FLYWAY migrate -dryRunOutput=\"${OutputDirectory}/workspace/Acceptance.sql\" -url=${AcceptanceDatabaseJdbc} -user=${User} -password=${ProdPassword} -schemas=${Schema}"
+            echo "Generating the dryrun script for Acceptance: $status"
+            if (status != 0) { error('Generating Dryrun script for Acceptance failed') }
+            
+            status = bat returnStatus: true, label: "Acceptance Deployment", script:" FLYWAY migrate info -url=${AcceptanceDatabaseJdbc} -user=${User} -password=${ProdPassword} -schemas=${Schema}"
+            echo "deploying to Acceptance: $status"
+            if (status != 0) { error('Deployment to Acceptance failed') }
+            
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'Acceptance.sql'
+            archiveArtifacts allowEmptyArchive: true, artifacts: '**/Acceptance_schema_changes_images/**'
+        }
+
     }
