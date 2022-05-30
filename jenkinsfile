@@ -2,15 +2,16 @@ pipeline {
     agent any
 
     stages {
-            stage ('Prep') {
-            echo "Ensure the pipeline is configured to clean the Jenkins workspace before checkout"
-            deleteDir()
-            checkout scm
-     }
+
+
+         
         stage('Build') {
                         steps   {
                                 echo 'Building..'
                             
+                                deleteDir()
+                                checkout scm
+
                                 def status
                                 // Clean the CI DB to get a fresh build
                                 status = bat returnStatus: true, label: "Clean", script:" FLYWAY clean info -url=jdbc:mysql://localhost:3306/moviesCI -user=root -password=Redg@te1"
