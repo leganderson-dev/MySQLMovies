@@ -1,4 +1,4 @@
-create table LOCATIONS
+create table Status
 (
     ID int not null
 )
