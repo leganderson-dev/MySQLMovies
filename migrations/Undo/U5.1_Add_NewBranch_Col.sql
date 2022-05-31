@@ -1,0 +1,2 @@
+ALTER TABLE `Movies_Masked`.`BRANCH` 
+DROP COLUMN `BRANCHcol`;
