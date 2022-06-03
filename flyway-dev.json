@@ -10,6 +10,15 @@
     "flywayConfFiles": [
       "./flyway.conf"
     ],
-    "generateUndoScripts": true
+    "generateUndoScripts": true,
+    "targetDatabases": [
+      {
+        "connectionProvider": {
+          "url": "jdbc:mysql://localhost:3306",
+          "type": "UsernamePassword"
+        },
+        "schemas": []
+      }
+    ]
   }
 }
