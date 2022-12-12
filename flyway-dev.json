@@ -18,6 +18,19 @@
           "type": "UsernamePassword"
         },
         "schemas": []
+      },
+      {
+        "connectionProvider": {
+          "url": "jdbc:mysql://localhost:3306/moviesci",
+          "username": "root",
+          "password": {
+            "data": "Redg@te1",
+            "secretType": "Inline"
+          },
+          "type": "UsernamePassword"
+        },
+        "schemas": [],
+        "displayName": "CI"
       }
     ]
   }
