@@ -1,5 +1,5 @@
 node {
-        def OutputDirectory = "F:/DevOps_Resources/Deployment Resources/MySQLMovies"
+        def OutputDirectory = "F:/DevOps_Resources/Deployment_Resources/MySQLMovies"
         
         def DatabaseJdbc = "jdbc:mysql://localhost:3306"
 
