@@ -31,7 +31,7 @@ node {
             status = bat returnStatus: true, label: "Reports", script:" FLYWAY check -code -changes -drift -dryrun -url=${DatabaseJdbc}/${BuildSchema} -user=${User} -password=${Password} -check.buildUrl=${DatabaseJdbc}/${CheckSchema} -reportFilename=${OutputDirectory}/workspace/Build.html"
             echo "Status of Running CI build: $status"
             if (status != 0) { error('Running CI build failed') }
-            archiveArtifacts allowEmptyArchive: true, artifacts: 'Build.html'
+            archiveArtifacts allowEmptyArchive: true, artifacts: '${OutputDirectory}/workspace/Build.html'
 
             // Clean the CI DB to get a fresh build
             status = bat returnStatus: true, label: "Clean", script:" FLYWAY clean info -url=${DatabaseJdbc}/${BuildSchema} -user=${User} -password=${Password} -cleanDisabled=false"
@@ -64,16 +64,23 @@ node {
         stage ('Deploy to Acceptance')
         {
             echo "Deploying project to Acceptance Database"
-                       
-            status = bat returnStatus: true, label: "Acceptance Reports", script:" FLYWAY migrate -dryRunOutput=\"${OutputDirectory}/workspace/Acceptance.sql\" -url=${DatabaseJdbc} -user=${User} -password=${Password} -schemas=${AcceptanceSchema}"
-            echo "Generating the dryrun script for Acceptance: $status"
-            if (status != 0) { error('Generating Dryrun script for Acceptance failed') }
             
-            status = bat returnStatus: true, label: "Acceptance Deployment", script:" FLYWAY migrate info -url=${DatabaseJdbc} -user=${User} -password=${Password} -schemas=${AcceptanceSchema}"
+            status = bat returnStatus: true, label: "Acceptance Deployment", script:" FLYWAY migrate info -url=${DatabaseJdbc}/${AcceptanceSchema} -user=${User} -password=${Password}"
             echo "deploying to Acceptance: $status"
             if (status != 0) { error('Deployment to Acceptance failed') }
             
             archiveArtifacts allowEmptyArchive: true, artifacts: 'Acceptance.sql'
+        }
+
+        stage ('Prepare Production Deployment Reports')
+        {
+            echo "Generating Pre-Deployment reports"
+         
+            // Prepare Production Deployment Reports    
+            status = bat returnStatus: true, label: "Production Reports", script:" FLYWAY check -code -changes -drift -dryrun -url=${DatabaseJdbc}/${ProdSchema} -user=${User} -password=${Password} -check.buildUrl=${DatabaseJdbc}/${CheckSchema} -reportFilename=${OutputDirectory}/workspace/Production.html"
+            echo "Creating Prod Reports: $status"
+            if (status != 0) { error('Creation of Prod Reports failed') }
+            archiveArtifacts allowEmptyArchive: true, artifacts: '${OutputDirectory}/workspace/Production.html'
         }
 
         stage ('Approval Gate')
@@ -99,15 +106,9 @@ node {
         stage ('Deploy to Production') 
         {
             echo "Deploying to Production Database"
-            
-            // Create the dry run script
-            status = bat returnStatus: true, label: "Production DryRun", script:" FLYWAY migrate -dryRunOutput=\"${OutputDirectory}/workspace/Production.sql\" -url=${DatabaseJdbc} -user=${User} -password=${Password} -schemas=${ProdSchema}"
-            echo "Generating the dryrun script for Production: $status"
-            if (status != 0) { error('Generating Dryrun script for Production failed') }
-            archiveArtifacts allowEmptyArchive: true, artifacts: 'Production.sql'
-            
+         
             // Deploy to Production      
-            status = bat returnStatus: true, label: "Production Deployment", script:" FLYWAY migrate info -url=${DatabaseJdbc} -user=${User} -password=${Password} -schemas=${ProdSchema}"
+            status = bat returnStatus: true, label: "Production Deployment", script:" FLYWAY migrate info -url=${DatabaseJdbc}/${ProdSchema} -user=${User} -password=${Password}"
             echo "deploying to Production: $status"
             if (status != 0) { error('Deployment to Production failed') }
             
