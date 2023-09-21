@@ -31,7 +31,7 @@ node {
             status = bat returnStatus: true, label: "Reports", script:" FLYWAY check -code -changes -drift -dryrun -url=${DatabaseJdbc}/${BuildSchema} -user=${User} -password=${Password} -check.buildUrl=${DatabaseJdbc}/${CheckSchema} -reportFilename=${OutputDirectory}/workspace/Build.html"
             echo "Status of Running CI build: $status"
             if (status != 0) { error('Running CI build failed') }
-            archiveArtifacts allowEmptyArchive: true, artifacts: '${OutputDirectory}/workspace/Build.html'
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'F:/DevOps_Resources/Deployment_Resources/MySQLMovies/workspace/Build.html'
 
             // Clean the CI DB to get a fresh build
             status = bat returnStatus: true, label: "Clean", script:" FLYWAY clean info -url=${DatabaseJdbc}/${BuildSchema} -user=${User} -password=${Password} -cleanDisabled=false"
@@ -80,7 +80,7 @@ node {
             status = bat returnStatus: true, label: "Production Reports", script:" FLYWAY check -code -changes -drift -dryrun -url=${DatabaseJdbc}/${ProdSchema} -user=${User} -password=${Password} -check.buildUrl=${DatabaseJdbc}/${CheckSchema} -reportFilename=${OutputDirectory}/workspace/Production.html"
             echo "Creating Prod Reports: $status"
             if (status != 0) { error('Creation of Prod Reports failed') }
-            archiveArtifacts allowEmptyArchive: true, artifacts: '${OutputDirectory}/workspace/Production.html'
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'F:/DevOps_Resources/Deployment_Resources/MySQLMovies/workspace/Production.html'
         }
 
         stage ('Approval Gate')
