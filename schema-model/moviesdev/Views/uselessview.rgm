@@ -1,4 +1,4 @@
 view "moviesdev"."uselessview" {
-  text = select `moviesdev`.`contacts`.`ID` AS `ID`,`moviesdev`.`contacts`.`first_name` AS `first_name`,`moviesdev`.`contacts`.`last_name` AS `last_name`,`moviesdev`.`contacts`.`gender` AS `gender`,`moviesdev`.`contacts`.`address_line_1` AS `address_line_1`,`moviesdev`.`contacts`.`address_line_2` AS `address_line_2`,`moviesdev`.`contacts`.`city` AS `city`,`moviesdev`.`contacts`.`postcode` AS `postcode`,`moviesdev`.`contacts`.`phone` AS `phone`,`moviesdev`.`contacts`.`email` AS `email` from `moviesdev`.`contacts`
+  text = select `moviesdev`.`contacts`.`ID` AS `ID`,`moviesdev`.`contacts`.`first_name` AS `first_name`,`moviesdev`.`contacts`.`last_name` AS `last_name`,`moviesdev`.`contacts`.`address_line_1` AS `address_line_1`,`moviesdev`.`contacts`.`address_line_2` AS `address_line_2`,`moviesdev`.`contacts`.`city` AS `city`,`moviesdev`.`contacts`.`postcode` AS `postcode`,`moviesdev`.`contacts`.`phone` AS `phone`,`moviesdev`.`contacts`.`email` AS `email` from `moviesdev`.`contacts`
 }
 

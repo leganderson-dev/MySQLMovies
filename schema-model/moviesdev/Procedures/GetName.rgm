@@ -4,6 +4,7 @@ procedure "moviesdev"."GetName" {
   text = """-
 BEGIN   
         SELECT * FROM CONTACTS;
+        #V2
 END
 """
 }
