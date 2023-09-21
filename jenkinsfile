@@ -34,7 +34,7 @@ node {
             archiveArtifacts allowEmptyArchive: true, artifacts: 'Build.html'
 
             // Clean the CI DB to get a fresh build
-            status = bat returnStatus: true, label: "Clean", script:" FLYWAY clean info -url=${DatabaseJdbc}/${BuildSchema} -user=${User} -password=${Password}"
+            status = bat returnStatus: true, label: "Clean", script:" FLYWAY clean info -url=${DatabaseJdbc}/${BuildSchema} -user=${User} -password=${Password} -cleanDisabled=false"
             echo "Status of Running CI build: $status"
             if (status != 0) { error('Running CI build failed') }
             
