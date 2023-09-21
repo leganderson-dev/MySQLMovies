@@ -4,6 +4,9 @@ table "moviesdev"."salesteam" {
       type = int
       null = NOT NULL
     }
+    column "Name" {
+      type = varchar(45)
+    }
   )
 }
 
