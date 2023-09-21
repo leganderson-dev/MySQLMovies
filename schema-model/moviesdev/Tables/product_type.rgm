@@ -1,0 +1,19 @@
+table "moviesdev"."product_type" {
+  columns = (
+    column "PRODUCT_TYPE_CD" {
+      type = varchar(255)
+      null = NOT NULL
+    }
+    column "NAME" {
+      type = varchar(50)
+    }
+  )
+  primaryKey = {
+    columns = [
+      PRODUCT_TYPE_CD
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+

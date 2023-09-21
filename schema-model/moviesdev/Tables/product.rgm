@@ -1,0 +1,49 @@
+table "moviesdev"."product" {
+  columns = (
+    column "PRODUCT_CD" {
+      type = varchar(10)
+      null = NOT NULL
+    }
+    column "DATE_OFFERED" {
+      type = date
+    }
+    column "DATE_RETIRED" {
+      type = date
+    }
+    column "NAME" {
+      type = varchar(50)
+      null = NOT NULL
+    }
+    column "PRODUCT_TYPE_CD" {
+      type = varchar(255)
+    }
+  )
+  primaryKey = {
+    columns = [
+      PRODUCT_CD
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+
+foreignKey "moviesdev"."product"."PRODUCT_PRODUCT_TYPE_FK" {
+  columns = [
+    "PRODUCT_TYPE_CD"
+  ]
+  referencedTable = "moviesdev"."product_type"
+  referencedColumns = [
+    "PRODUCT_TYPE_CD"
+  ]
+}
+
+index "moviesdev"."product"."PRODUCT_PRODUCT_TYPE_FK" {
+  columns = <
+    {
+      name = PRODUCT_TYPE_CD
+    }
+
+  >
+  type = BTREE
+}
+

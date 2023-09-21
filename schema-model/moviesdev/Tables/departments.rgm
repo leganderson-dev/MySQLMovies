@@ -1,0 +1,9 @@
+table "moviesdev"."departments" {
+  columns = (
+    column "ID" {
+      type = int
+      null = NOT NULL
+    }
+  )
+}
+

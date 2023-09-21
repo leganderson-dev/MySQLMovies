@@ -1,0 +1,103 @@
+table "moviesdev"."employee" {
+  columns = (
+    column "EMP_ID" {
+      type = int
+      null = NOT NULL
+    }
+    column "END_DATE" {
+      type = date
+    }
+    column "FIRST_NAME" {
+      type = varchar(20)
+      null = NOT NULL
+    }
+    column "LAST_NAME" {
+      type = varchar(20)
+      null = NOT NULL
+    }
+    column "START_DATE" {
+      type = date
+      null = NOT NULL
+    }
+    column "TITLE" {
+      type = varchar(20)
+    }
+    column "ASSIGNED_BRANCH_ID" {
+      type = int
+    }
+    column "DEPT_ID" {
+      type = int
+    }
+    column "SUPERIOR_EMP_ID" {
+      type = int
+    }
+  )
+  primaryKey = {
+    columns = [
+      EMP_ID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+
+foreignKey "moviesdev"."employee"."EMPLOYEE_BRANCH_FK" {
+  columns = [
+    "ASSIGNED_BRANCH_ID"
+  ]
+  referencedTable = "moviesdev"."branch"
+  referencedColumns = [
+    "BRANCH_ID"
+  ]
+}
+
+foreignKey "moviesdev"."employee"."EMPLOYEE_DEPARTMENT_FK" {
+  columns = [
+    "DEPT_ID"
+  ]
+  referencedTable = "moviesdev"."department"
+  referencedColumns = [
+    "DEPT_ID"
+  ]
+}
+
+foreignKey "moviesdev"."employee"."EMPLOYEE_EMPLOYEE_FK" {
+  columns = [
+    "SUPERIOR_EMP_ID"
+  ]
+  referencedTable = "moviesdev"."employee"
+  referencedColumns = [
+    "EMP_ID"
+  ]
+}
+
+index "moviesdev"."employee"."EMPLOYEE_BRANCH_FK" {
+  columns = <
+    {
+      name = ASSIGNED_BRANCH_ID
+    }
+
+  >
+  type = BTREE
+}
+
+index "moviesdev"."employee"."EMPLOYEE_DEPARTMENT_FK" {
+  columns = <
+    {
+      name = DEPT_ID
+    }
+
+  >
+  type = BTREE
+}
+
+index "moviesdev"."employee"."EMPLOYEE_EMPLOYEE_FK" {
+  columns = <
+    {
+      name = SUPERIOR_EMP_ID
+    }
+
+  >
+  type = BTREE
+}
+

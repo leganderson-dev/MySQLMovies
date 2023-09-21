@@ -1,0 +1,22 @@
+databaseType = "MySql"
+name = "GitHubMySQLMovies"
+id = "79447124-41bf-4134-9645-680b6537718f"
+
+[flywayDesktop]
+developmentEnvironment = "development"
+shadowEnvironment = "shadow"
+schemaModel = "./schema-model"
+
+  [flywayDesktop.generate]
+  undoScripts = true
+
+[redgateCompare]
+filterFile = "filter.rgf"
+
+[flyway]
+mixed = true
+outOfOrder = true
+locations = [ "filesystem:migrations" ]
+validateMigrationNaming = true
+baselineVersion = "001_20230921110969"
+baselineOnMigrate = true

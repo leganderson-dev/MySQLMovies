@@ -1,0 +1,20 @@
+table "moviesdev"."department" {
+  columns = (
+    column "DEPT_ID" {
+      type = int
+      null = NOT NULL
+    }
+    column "NAME" {
+      type = varchar(20)
+      null = NOT NULL
+    }
+  )
+  primaryKey = {
+    columns = [
+      DEPT_ID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+

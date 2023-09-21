@@ -1,0 +1,36 @@
+table "moviesdev"."contacts" {
+  columns = (
+    column "ID" {
+      type = int
+      null = NOT NULL
+    }
+    column "first_name" {
+      type = varchar(128)
+    }
+    column "last_name" {
+      type = varchar(128)
+    }
+    column "gender" {
+      type = varchar(128)
+    }
+    column "address_line_1" {
+      type = varchar(128)
+    }
+    column "address_line_2" {
+      type = varchar(128)
+    }
+    column "city" {
+      type = varchar(128)
+    }
+    column "postcode" {
+      type = varchar(128)
+    }
+    column "phone" {
+      type = int
+    }
+    column "email" {
+      type = varchar(128)
+    }
+  )
+}
+

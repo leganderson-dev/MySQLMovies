@@ -1,0 +1,37 @@
+table "moviesdev"."individual" {
+  columns = (
+    column "BIRTH_DATE" {
+      type = date
+    }
+    column "FIRST_NAME" {
+      type = varchar(30)
+      null = NOT NULL
+    }
+    column "LAST_NAME" {
+      type = varchar(30)
+      null = NOT NULL
+    }
+    column "CUST_ID" {
+      type = int
+      null = NOT NULL
+    }
+  )
+  primaryKey = {
+    columns = [
+      CUST_ID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+
+foreignKey "moviesdev"."individual"."INDIVIDUAL_CUSTOMER_FK" {
+  columns = [
+    "CUST_ID"
+  ]
+  referencedTable = "moviesdev"."customer"
+  referencedColumns = [
+    "CUST_ID"
+  ]
+}
+

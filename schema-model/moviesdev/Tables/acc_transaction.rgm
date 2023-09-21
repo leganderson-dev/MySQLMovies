@@ -1,0 +1,100 @@
+table "moviesdev"."acc_transaction" {
+  columns = (
+    column "TXN_ID" {
+      type = bigint
+      null = NOT NULL
+    }
+    column "AMOUNT" {
+      type = float
+      null = NOT NULL
+    }
+    column "FUNDS_AVAIL_DATE" {
+      type = datetime
+      null = NOT NULL
+    }
+    column "TXN_DATE" {
+      type = datetime
+      null = NOT NULL
+    }
+    column "TXN_TYPE_CD" {
+      type = varchar(10)
+    }
+    column "ACCOUNT_ID" {
+      type = int
+    }
+    column "EXECUTION_BRANCH_ID" {
+      type = int
+    }
+    column "TELLER_EMP_ID" {
+      type = int
+    }
+  )
+  primaryKey = {
+    columns = [
+      TXN_ID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+
+foreignKey "moviesdev"."acc_transaction"."ACC_TRANSACTION_ACCOUNT_FK" {
+  columns = [
+    "ACCOUNT_ID"
+  ]
+  referencedTable = "moviesdev"."account"
+  referencedColumns = [
+    "ACCOUNT_ID"
+  ]
+}
+
+foreignKey "moviesdev"."acc_transaction"."ACC_TRANSACTION_BRANCH_FK" {
+  columns = [
+    "EXECUTION_BRANCH_ID"
+  ]
+  referencedTable = "moviesdev"."branch"
+  referencedColumns = [
+    "BRANCH_ID"
+  ]
+}
+
+foreignKey "moviesdev"."acc_transaction"."ACC_TRANSACTION_EMPLOYEE_FK" {
+  columns = [
+    "TELLER_EMP_ID"
+  ]
+  referencedTable = "moviesdev"."employee"
+  referencedColumns = [
+    "EMP_ID"
+  ]
+}
+
+index "moviesdev"."acc_transaction"."ACC_TRANSACTION_ACCOUNT_FK" {
+  columns = <
+    {
+      name = ACCOUNT_ID
+    }
+
+  >
+  type = BTREE
+}
+
+index "moviesdev"."acc_transaction"."ACC_TRANSACTION_BRANCH_FK" {
+  columns = <
+    {
+      name = EXECUTION_BRANCH_ID
+    }
+
+  >
+  type = BTREE
+}
+
+index "moviesdev"."acc_transaction"."ACC_TRANSACTION_EMPLOYEE_FK" {
+  columns = <
+    {
+      name = TELLER_EMP_ID
+    }
+
+  >
+  type = BTREE
+}
+

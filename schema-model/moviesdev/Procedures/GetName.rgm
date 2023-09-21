@@ -1,0 +1,10 @@
+procedure "moviesdev"."GetName" {
+  parameters = [
+  ]
+  text = """-
+BEGIN   
+        SELECT * FROM CONTACTS;
+END
+"""
+}
+

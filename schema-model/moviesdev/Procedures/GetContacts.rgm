@@ -1,0 +1,11 @@
+procedure "moviesdev"."GetContacts" {
+  parameters = [
+  ]
+  text = """-
+BEGIN   
+        SELECT * FROM CONTACTS;
+#V3
+END
+"""
+}
+

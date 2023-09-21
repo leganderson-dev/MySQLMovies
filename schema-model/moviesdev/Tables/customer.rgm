@@ -1,0 +1,36 @@
+table "moviesdev"."customer" {
+  columns = (
+    column "CUST_ID" {
+      type = int
+      null = NOT NULL
+    }
+    column "ADDRESS" {
+      type = varchar(30)
+    }
+    column "CITY" {
+      type = varchar(20)
+    }
+    column "CUST_TYPE_CD" {
+      type = varchar(1)
+      null = NOT NULL
+    }
+    column "FED_ID" {
+      type = varchar(12)
+      null = NOT NULL
+    }
+    column "POSTAL_CODE" {
+      type = varchar(10)
+    }
+    column "STATE" {
+      type = varchar(20)
+    }
+  )
+  primaryKey = {
+    columns = [
+      CUST_ID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+

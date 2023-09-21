@@ -1,0 +1,9 @@
+table "moviesdev"."locations" {
+  columns = (
+    column "ID" {
+      type = int
+      null = NOT NULL
+    }
+  )
+}
+

@@ -1,0 +1,9 @@
+table "moviesdev"."salesteam" {
+  columns = (
+    column "ID" {
+      type = int
+      null = NOT NULL
+    }
+  )
+}
+

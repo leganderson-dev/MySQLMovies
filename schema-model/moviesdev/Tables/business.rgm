@@ -1,0 +1,37 @@
+table "moviesdev"."business" {
+  columns = (
+    column "INCORP_DATE" {
+      type = date
+    }
+    column "NAME" {
+      type = varchar(255)
+      null = NOT NULL
+    }
+    column "STATE_ID" {
+      type = varchar(10)
+      null = NOT NULL
+    }
+    column "CUST_ID" {
+      type = int
+      null = NOT NULL
+    }
+  )
+  primaryKey = {
+    columns = [
+      CUST_ID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+
+foreignKey "moviesdev"."business"."BUSINESS_EMPLOYEE_FK" {
+  columns = [
+    "CUST_ID"
+  ]
+  referencedTable = "moviesdev"."customer"
+  referencedColumns = [
+    "CUST_ID"
+  ]
+}
+

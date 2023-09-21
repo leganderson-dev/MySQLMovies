@@ -1,0 +1,32 @@
+table "moviesdev"."branch" {
+  columns = (
+    column "BRANCH_ID" {
+      type = int
+      null = NOT NULL
+    }
+    column "ADDRESS" {
+      type = varchar(30)
+    }
+    column "CITY" {
+      type = varchar(20)
+    }
+    column "NAME" {
+      type = varchar(20)
+      null = NOT NULL
+    }
+    column "STATE" {
+      type = varchar(10)
+    }
+    column "ZIP_CODE" {
+      type = varchar(12)
+    }
+  )
+  primaryKey = {
+    columns = [
+      BRANCH_ID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+

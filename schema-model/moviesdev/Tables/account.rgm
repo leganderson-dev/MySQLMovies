@@ -1,0 +1,130 @@
+table "moviesdev"."account" {
+  columns = (
+    column "ACCOUNT_ID" {
+      type = int
+      null = NOT NULL
+    }
+    column "AVAIL_BALANCE" {
+      type = float
+    }
+    column "CLOSE_DATE" {
+      type = date
+    }
+    column "LAST_ACTIVITY_DATE" {
+      type = date
+    }
+    column "OPEN_DATE" {
+      type = date
+      null = NOT NULL
+    }
+    column "PENDING_BALANCE" {
+      type = float
+    }
+    column "STATUS" {
+      type = varchar(10)
+    }
+    column "CUST_ID" {
+      type = int
+    }
+    column "OPEN_BRANCH_ID" {
+      type = int
+      null = NOT NULL
+    }
+    column "OPEN_EMP_ID" {
+      type = int
+      null = NOT NULL
+    }
+    column "PRODUCT_CD" {
+      type = varchar(10)
+      null = NOT NULL
+    }
+  )
+  primaryKey = {
+    columns = [
+      ACCOUNT_ID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+
+foreignKey "moviesdev"."account"."ACCOUNT_BRANCH_FK" {
+  columns = [
+    "OPEN_BRANCH_ID"
+  ]
+  referencedTable = "moviesdev"."branch"
+  referencedColumns = [
+    "BRANCH_ID"
+  ]
+}
+
+foreignKey "moviesdev"."account"."ACCOUNT_CUSTOMER_FK" {
+  columns = [
+    "CUST_ID"
+  ]
+  referencedTable = "moviesdev"."customer"
+  referencedColumns = [
+    "CUST_ID"
+  ]
+}
+
+foreignKey "moviesdev"."account"."ACCOUNT_EMPLOYEE_FK" {
+  columns = [
+    "OPEN_EMP_ID"
+  ]
+  referencedTable = "moviesdev"."employee"
+  referencedColumns = [
+    "EMP_ID"
+  ]
+}
+
+foreignKey "moviesdev"."account"."ACCOUNT_PRODUCT_FK" {
+  columns = [
+    "PRODUCT_CD"
+  ]
+  referencedTable = "moviesdev"."product"
+  referencedColumns = [
+    "PRODUCT_CD"
+  ]
+}
+
+index "moviesdev"."account"."ACCOUNT_BRANCH_FK" {
+  columns = <
+    {
+      name = OPEN_BRANCH_ID
+    }
+
+  >
+  type = BTREE
+}
+
+index "moviesdev"."account"."ACCOUNT_CUSTOMER_FK" {
+  columns = <
+    {
+      name = CUST_ID
+    }
+
+  >
+  type = BTREE
+}
+
+index "moviesdev"."account"."ACCOUNT_EMPLOYEE_FK" {
+  columns = <
+    {
+      name = OPEN_EMP_ID
+    }
+
+  >
+  type = BTREE
+}
+
+index "moviesdev"."account"."ACCOUNT_PRODUCT_FK" {
+  columns = <
+    {
+      name = PRODUCT_CD
+    }
+
+  >
+  type = BTREE
+}
+

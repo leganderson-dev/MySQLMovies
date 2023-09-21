@@ -1,0 +1,57 @@
+table "moviesdev"."officer" {
+  columns = (
+    column "OFFICER_ID" {
+      type = int
+      null = NOT NULL
+    }
+    column "END_DATE" {
+      type = date
+    }
+    column "FIRST_NAME" {
+      type = varchar(30)
+      null = NOT NULL
+    }
+    column "LAST_NAME" {
+      type = varchar(30)
+      null = NOT NULL
+    }
+    column "START_DATE" {
+      type = date
+      null = NOT NULL
+    }
+    column "TITLE" {
+      type = varchar(20)
+    }
+    column "CUST_ID" {
+      type = int
+    }
+  )
+  primaryKey = {
+    columns = [
+      OFFICER_ID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+
+foreignKey "moviesdev"."officer"."OFFICER_CUSTOMER_FK" {
+  columns = [
+    "CUST_ID"
+  ]
+  referencedTable = "moviesdev"."customer"
+  referencedColumns = [
+    "CUST_ID"
+  ]
+}
+
+index "moviesdev"."officer"."OFFICER_CUSTOMER_FK" {
+  columns = <
+    {
+      name = CUST_ID
+    }
+
+  >
+  type = BTREE
+}
+
