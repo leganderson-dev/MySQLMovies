@@ -1,11 +1,12 @@
 node {
         def OutputDirectory = "F:/DevOps_Resources/Deployment Resources/MySQLMovies"
         
-        def DatabaseJdbc = "jdbc:mysql://localhost:3306/movies"
+        def DatabaseJdbc = "jdbc:mysql://localhost:3306"
 
         def BuildSchema = "moviesci"        
         def AcceptanceSchema = "moviesacceptance"
         def ProdSchema = "movies"  
+        def CheckSchema = 'moviescheck'
 
       
         def User = "root"
@@ -25,19 +26,20 @@ node {
             echo "DB Build"
         
             def status
+
+            // Generate reports
+            status = bat returnStatus: true, label: "Reports", script:" FLYWAY check -code -changes -drift -dryrun -url=${DatabaseJdbc}/${BuildSchema} -user=${User} -password=${Password} -check.buildUrl=${DatabaseJdbc}/${CheckSchema} -reportFilename=${OutputDirectory}/workspace/Build.html"
+            echo "Status of Running CI build: $status"
+            if (status != 0) { error('Running CI build failed') }
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'Build.html'
+
             // Clean the CI DB to get a fresh build
-            status = bat returnStatus: true, label: "Clean", script:" FLYWAY clean info -url=${DatabaseJdbc} -user=${User} -password=${Password} -schemas=${BuildSchema}"
+            status = bat returnStatus: true, label: "Clean", script:" FLYWAY clean info -url=${DatabaseJdbc}/${BuildSchema} -user=${User} -password=${Password}"
             echo "Status of Running CI build: $status"
             if (status != 0) { error('Running CI build failed') }
             
-            // Generate the dry run script for later review
-            status = bat returnStatus: true, label: "DryRun", script:" FLYWAY migrate info -dryRunOutput=\"${OutputDirectory}/workspace/Build.sql\" -url=${DatabaseJdbc} -user=${User} -password=${Password} -schemas=${BuildSchema}"
-            echo "Status of Running CI build: $status"
-            if (status != 0) { error('Running CI build failed') }
-            archiveArtifacts allowEmptyArchive: true, artifacts: 'Build.sql'
-    
             // Migrate the CI db
-            status = bat returnStatus: true, label: "Build", script:" FLYWAY migrate info -url=${DatabaseJdbc} -user=${User} -password=${Password} -schemas=${BuildSchema}"
+            status = bat returnStatus: true, label: "Build", script:" FLYWAY migrate info -url=${DatabaseJdbc}/${BuildSchema} -user=${User} -password=${Password}"
             echo "Status of Running CI build: $status"
             if (status != 0) { error('Running CI build failed') }
          }
@@ -63,7 +65,7 @@ node {
         {
             echo "Deploying project to Acceptance Database"
                        
-            status = bat returnStatus: true, label: "Acceptance DryRun", script:" FLYWAY migrate -dryRunOutput=\"${OutputDirectory}/workspace/Acceptance.sql\" -url=${DatabaseJdbc} -user=${User} -password=${Password} -schemas=${AcceptanceSchema}"
+            status = bat returnStatus: true, label: "Acceptance Reports", script:" FLYWAY migrate -dryRunOutput=\"${OutputDirectory}/workspace/Acceptance.sql\" -url=${DatabaseJdbc} -user=${User} -password=${Password} -schemas=${AcceptanceSchema}"
             echo "Generating the dryrun script for Acceptance: $status"
             if (status != 0) { error('Generating Dryrun script for Acceptance failed') }
             
