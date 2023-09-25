@@ -7,6 +7,9 @@ table "moviesdev"."salesteam" {
     column "Name" {
       type = varchar(50)
     }
+    column "GUIDemo" {
+      type = varchar(45)
+    }
   )
 }
 
