@@ -5,7 +5,7 @@ table "moviesdev"."salesteam" {
       null = NOT NULL
     }
     column "Name" {
-      type = varchar(45)
+      type = varchar(50)
     }
     column "GUIDemo" {
       type = varchar(45)
