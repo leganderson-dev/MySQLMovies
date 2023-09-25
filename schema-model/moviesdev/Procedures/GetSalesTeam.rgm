@@ -1,0 +1,16 @@
+procedure "moviesdev"."GetSalesTeam" {
+  parameters = <
+    {
+      name = id
+      datatype = int
+      mode = IN
+    }
+
+  >
+  text = """-
+BEGIN
+    SELECT * FROM salesteam WHERE id = id;
+END
+"""
+}
+
